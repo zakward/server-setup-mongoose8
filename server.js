@@ -21,6 +21,16 @@ const connectToDB = async () => {
 
 connectToDB()
 
+//routes
+app.use("/auth", require("./routes/authRouter"))
+
+app.use((err, req, res, next) => {
+    console.log(err); // Log the error for debugging
+    if (err.name === "UnauthorizedError") {
+        res.status(err.status); // Set the response status to 401 Unauthorized
+    }
+    return res.send({ errMsg: err.message }); // Send a JSON response with the error message
+});
 
 
 app.listen(process.env.PORT, () => console.log(`Server Connected on port ${process.env.PORT}`))
